@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--header-->
+    <item name="pre_tv_title" type="id"/>
+    <item name="pre_v_back" type="id"/>
+    <!--refresh-->
+    <item name="pre_refresh" type="id"/>
+    <item name="pre_recycler_view" type="id"/>
+</resources>

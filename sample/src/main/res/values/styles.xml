@@ -1,11 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/background</item>
+
+        <!--　&lt;!&ndash;设置switchButton样式&ndash;&gt;-->
+        <!--<item name="colorControlActivated">@color/color_green</item>-->
+        <!--<item name="colorSwitchThumbNormal">@color/white_normal</item>-->
+        <!--<item name="android:colorForeground">@color/white_normal</item>-->
+    </style>
+
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 </resources>
