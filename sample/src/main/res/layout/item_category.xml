@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/af_bg_item"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_twelve">
+
+    <ImageView
+        android:id="@+id/iv_item_CategoryAdapter"
+        android:layout_width="@dimen/spacing_float_btn"
+        android:layout_height="@dimen/spacing_float_btn"
+        android:layout_marginRight="@dimen/spacing_small"
+        android:contentDescription="@string/af_desc_pic"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_author_CategoryAdapter"
+        style="@style/text_big_content"
+        android:layout_width="match_parent"
+        android:layout_toLeftOf="@+id/tv_publish_time_CategoryAdapter"
+        android:layout_toRightOf="@id/iv_item_CategoryAdapter"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="作者"/>
+
+    <TextView
+        android:id="@+id/tv_source_CategoryAdapter"
+        style="@style/text_big_content"
+        android:layout_below="@+id/tv_author_CategoryAdapter"
+        android:layout_marginTop="@dimen/spacing_four"
+        android:layout_toRightOf="@id/iv_item_CategoryAdapter"
+        android:text="来源"/>
+
+    <TextView
+        android:id="@+id/tv_publish_time_CategoryAdapter"
+        style="@style/text_normal"
+        android:layout_alignBottom="@+id/tv_author_CategoryAdapter"
+        android:layout_alignParentRight="true"
+        android:text="2017-03-24 17:05"/>
+
+    <TextView
+        android:id="@+id/tv_desc_CategoryAdapter"
+        style="@style/text_normal"
+        android:layout_below="@+id/tv_source_CategoryAdapter"
+        android:layout_marginTop="@dimen/spacing_four"
+        android:layout_toRightOf="@id/iv_item_CategoryAdapter"
+        android:ellipsize="end"
+        android:lineSpacingExtra="@dimen/spacing_two"
+        android:maxLines="2"
+        android:text="描述，最多两行"/>
+
+</RelativeLayout>

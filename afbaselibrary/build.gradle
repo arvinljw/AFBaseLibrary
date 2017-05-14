@@ -54,4 +54,6 @@ dependencies {
     compile 'com.jakewharton:butterknife-compiler:8.4.0'
     //日志
     compile 'com.orhanobut:logger:1.15'
+    //BGABanner
+    compile 'cn.bingoogolapple:bga-banner:2.1.7@aar'
 }

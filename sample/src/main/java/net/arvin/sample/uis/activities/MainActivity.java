@@ -2,8 +2,13 @@ package net.arvin.sample.uis.activities;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.view.View;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 
 import net.arvin.afbaselibrary.uis.activities.BaseActivity;
+import net.arvin.afbaselibrary.uis.activities.BaseRefreshLoadActivity;
 import net.arvin.afbaselibrary.uis.helpers.IBaseContact;
 import net.arvin.sample.R;
 import net.arvin.sample.uis.fragments.HeaderFragment;
@@ -14,7 +19,7 @@ import net.arvin.sample.uis.fragments.HeaderFragment;
  * Desc：首页，这个界面退出就是桌面即在栈底，所以需要重写onBackPressed方法，去掉向右关闭的动画
  * 在style方面若是使用了右滑关闭功能，那么应该想这个例子一样，Application的theme设为窗口透明，栈底界面的theme应设为不透明
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseRefreshLoadActivity<Class> {
 
     @Override
     public int getContentView() {
@@ -22,29 +27,53 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void initViews(Bundle savedInstanceState) {
-        getSupportFragmentManager().beginTransaction().add(R.id.layout_content,new HeaderFragment()).commit();
-        needCameraPermission();
-    }
-
-    private void needCameraPermission() {
-        String perms[] = {Manifest.permission.CAMERA};
-        requestPermission(new IBaseContact.IRequestPermissionCallback() {
-            @Override
-            public void agreeAll() {
-                //do something
-                showToast("已获得所有申请权限");
-            }
-        }, "该应用需要使用相机，请允许", perms);
+    public String getTitleText() {
+        return "首页";
     }
 
     @Override
-    protected void permissionRequestBackFromSetting() {
-        needCameraPermission();
+    public boolean isShowBackView() {
+        return false;
+    }
+
+    @Override
+    public void initViews(Bundle savedInstanceState) {
+        autoRefresh();
+    }
+
+    @Override
+    public BaseQuickAdapter<Class, BaseViewHolder> getAdapter() {
+        return new BaseQuickAdapter<Class, BaseViewHolder>(R.layout.item_text, mItems) {
+            @Override
+            protected void convert(BaseViewHolder helper, Class item) {
+                helper.setText(R.id.tv_item, item.getSimpleName());
+            }
+        };
+    }
+
+    @Override
+    public void loadData(int page) {
+        mRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mItems.clear();
+
+                mItems.add(TabDemoActivity.class);
+
+
+                refreshLoadComplete(false);
+            }
+        }, 500);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(mItems.get(position));
     }
 
     @Override
     public void onBackPressed() {
         finish();
     }
+
 }

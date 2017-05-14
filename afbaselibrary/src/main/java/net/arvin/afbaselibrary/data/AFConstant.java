@@ -13,4 +13,6 @@ public class AFConstant {
 
     public static final int REFRESH_FIRST_PAGE = 1;
     public static final int REFRESH_DEFAULT_SIZE = 15;
+
+    public static final int PAGE_CACHE_SIZE = 5;
 }

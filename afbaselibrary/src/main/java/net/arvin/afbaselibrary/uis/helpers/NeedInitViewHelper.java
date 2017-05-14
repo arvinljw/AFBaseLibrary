@@ -21,6 +21,15 @@ public class NeedInitViewHelper<T extends IBaseContact.IBase> implements IBaseCo
         this.mRoot = mRoot;
     }
 
+    @SuppressWarnings("unchecked")
+    public  <E extends View> E getView(int id) {
+        if (mRoot == null) {
+            return (E) mBaseView.getAFContext().findViewById(id);
+        } else {
+            return (E) mRoot.findViewById(id);
+        }
+    }
+
     @Override
     public void destroyIt() {
         mRoot = null;

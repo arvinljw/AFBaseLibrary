@@ -18,4 +18,26 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="text_normal">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/txt_normal_content</item>
+        <item name="android:textColor">@color/black_normal</item>
+    </style>
+
+    <style name="text_normal.secondary">
+        <item name="android:textColor">@color/black_secondary</item>
+    </style>
+
+    <style name="text_big_content">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/txt_big_content</item>
+        <item name="android:textColor">@color/black_normal</item>
+    </style>
+
+    <style name="text_big_content.secondary">
+        <item name="android:textColor">@color/black_secondary</item>
+    </style>
+
 </resources>

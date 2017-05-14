@@ -117,6 +117,11 @@ public abstract class BaseRefreshLoadActivity<T> extends BaseRefreshActivity imp
     }
 
     @Override
+    public boolean isSuccess(List<T> backData) {
+        return mRefreshLoadHelper.isSuccess(backData);
+    }
+
+    @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         AFLog.d("item->" + position + " clicked");
     }

@@ -9,18 +9,23 @@
 首先这个库的意图在于：能够快速高效的开发；里边会包含到大部分在一个应用软件中用到的功能点的封装，作为这样一个库，这里封装的每一个功能点都应该需要做到便于扩展。下面介绍一下这个库中包含的功能点：
 
 * 界面（常用的Activity和Fragment）
-* Adapter
 * 提示相关（Dialog、Toast、PopUpWindow等）
 * 网络模块
-* 常用工具类继承
+* 常用工具类集成
 * 常用的三方包引入
 
 之后会展开对每一个功能点进行详细的说明，这几个模块是我自己根据项目的积累所认为的一些有必要的封装。
 
-*注：建议以Module的方式引入，这样方便根据自己项目情况进行调整*
+*注：建议以Module的方式引入，这样方便根据自己项目情况进行调整。*
+
+*这里没有太多的使用指南，更多是在Sample代码中体现。*
+
+*若是有疑问的可随时提问，看到后就会及时处理*
 
 ## 例子
 [Sample.apk]()
+
+## 实现与介绍
 
 ### 界面
 
@@ -31,7 +36,6 @@
 * BaseHeaderView（带标题）
 * BaseRefreshView（只有下拉刷新）
 * BaseRefreshLoadingView（下拉刷新和上拉加载）
-* BasePagerView（ViewPager使用）
 * BaseTabPagerView（TabLayout和ViewPager的结合）
 * BaseHtmlView（WebView的封装）
 
@@ -47,11 +51,40 @@
 
 #### [BaseRefreshLoadingView](readme/BaseRefreshLoadingView.md)
 
-#### [BasePagerView](readme/BasePagerView.md)
-
 #### [BaseTabPagerView](readme/BaseTabPagerView.md)
 
 #### [BaseHtmlView](readme/BaseHtmlView.md)
+
+### 网络模块
+
+在项目中网络请求肯定是必不可少的，目前来看Retrofit的使用应该是比较大众的，确实使用起来也简单很多，目前这个模块封装的功能包括：
+
+* 通过泛型初始化一个默认的请求接口；
+* 支持https，只需传入证书名称；
+* BaseService与BaseNet同时被继承使用，可解决请求可能产生的内存泄漏；
+
+可扩展的功能（因为这些部分都是需要与后台写作的所以没法写固定了）：
+
+* 若想对请求借口分模块书写，也方便扩展；
+* 支持重写convert，自定义解析；
+* 错误信息可通过继承ApiCallback统一处理。
+
+具体例子可看Sample中的CategoryFragment，每个类实现起来都很简单，很方便，其中自定义Convert解析与后台约定好后，基本是写一次就可以每次使用了。
+
+*注：其中https请求可自行调试，Sample中暂未例子。*
+
+### 提示相关
+
+#### BaseDialog
+
+在Android中自定义Dialog还是比较常见的，而我们也是有好些代码是会经常重复写的，所以这里我也简单的封装了一下：
+
+* 宽和高的重新定义，可重写getWidth和getHeight方法改变默认值；
+* 定义了从底部弹出的动画；
+* 定义了一些常见的Dialog的style；
+
+有了这些，我们就能更容易的实现一个Dialog，当然如果没有特别要求的Dialog使用v7包下的Alert
+
 
 
 

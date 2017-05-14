@@ -44,10 +44,12 @@ public class IBaseRefreshLoadContact {
 
         void refreshLoadComplete(boolean success);
 
+        boolean isSuccess(List<T> backData);
+
         void loadData(final int page);
     }
 
-    public interface IBaseRefreshLoadPresenter extends IBaseContact.IPresenter {
+    public interface IBaseRefreshLoadPresenter<T> extends IBaseContact.IPresenter {
         RecyclerView setRecyclerView();
 
         int getDefaultRecyclerViewId();
@@ -67,5 +69,7 @@ public class IBaseRefreshLoadContact {
         void onLoadMoreRequest();
 
         void refreshLoadComplete(boolean success);
+
+        boolean isSuccess(List<T> backData);
     }
 }

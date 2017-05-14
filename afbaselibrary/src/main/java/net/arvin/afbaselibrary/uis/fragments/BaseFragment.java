@@ -69,8 +69,18 @@ public abstract class BaseFragment extends Fragment implements IBaseContact.IBas
     }
 
     @Override
+    public void startActivity(Class clazz) {
+        startActivity(clazz, null);
+    }
+
+    @Override
     public void startActivity(Class clazz, Bundle bundle) {
         mBaseHelper.startActivity(clazz, bundle);
+    }
+
+    @Override
+    public void startActivityForResult(Class clazz, int requestCode) {
+        startActivityForResult(clazz, null, requestCode);
     }
 
     @Override

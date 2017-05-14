@@ -35,7 +35,11 @@ public class IBaseContact {
 
         void hideProgressDialog();
 
+        void startActivity(Class clazz);
+
         void startActivity(Class clazz, Bundle bundle);
+
+        void startActivityForResult(Class clazz, int requestCode);
 
         void startActivityForResult(Class clazz, Bundle bundle, int requestCode);
 

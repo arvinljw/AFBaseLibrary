@@ -1,0 +1,28 @@
+<resources>
+
+    <style name="af_anim_bottom_in" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/af_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/af_bottom_out</item>
+    </style>
+
+    <style name="normal_dialog" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="normal_dialog.white">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <style name="normal_dialog.corner">
+        <item name="android:windowBackground">@drawable/af_bg_white_corner</item>
+    </style>
+
+    <style name="normal_dialog.translate">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+</resources>

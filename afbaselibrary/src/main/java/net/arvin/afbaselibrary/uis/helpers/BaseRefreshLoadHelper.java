@@ -12,6 +12,8 @@ import net.arvin.afbaselibrary.R;
 import net.arvin.afbaselibrary.data.AFConstant;
 import net.arvin.afbaselibrary.uis.views.HorizontalDividerItemDecoration;
 
+import java.util.List;
+
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
@@ -19,7 +21,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
  * Function：
  * Desc：
  */
-public class BaseRefreshLoadHelper<T> extends BaseRefreshHelper<IBaseRefreshLoadContact.IBaseRefreshLoadView<T>> implements IBaseRefreshLoadContact.IBaseRefreshLoadPresenter {
+public class BaseRefreshLoadHelper<T> extends BaseRefreshHelper<IBaseRefreshLoadContact.IBaseRefreshLoadView<T>> implements IBaseRefreshLoadContact.IBaseRefreshLoadPresenter<T> {
 
     protected int mCurrPage = AFConstant.REFRESH_FIRST_PAGE;
 
@@ -40,11 +42,7 @@ public class BaseRefreshLoadHelper<T> extends BaseRefreshHelper<IBaseRefreshLoad
 
     @Override
     public RecyclerView setRecyclerView() {
-        if (mRoot == null) {
-            mRecyclerView = (RecyclerView) mBaseView.getAFContext().findViewById(mBaseView.getRecyclerViewId());
-        } else {
-            mRecyclerView = (RecyclerView) mRoot.findViewById(mBaseView.getRecyclerViewId());
-        }
+        mRecyclerView = getView(mBaseView.getRecyclerViewId());
         return mRecyclerView;
     }
 
@@ -116,5 +114,16 @@ public class BaseRefreshLoadHelper<T> extends BaseRefreshHelper<IBaseRefreshLoad
         }
         boolean enableLoadMore = mBaseView.getItems().size() % AFConstant.REFRESH_DEFAULT_SIZE == 0;
         mBaseView.getGenerateAdapter().setEnableLoadMore(enableLoadMore && success);
+    }
+
+    @Override
+    public boolean isSuccess(List<T> backData) {
+        return backData != null && backData.size() > 0;
+    }
+
+    @Override
+    public void destroyIt() {
+        super.destroyIt();
+        mRecyclerView = null;
     }
 }

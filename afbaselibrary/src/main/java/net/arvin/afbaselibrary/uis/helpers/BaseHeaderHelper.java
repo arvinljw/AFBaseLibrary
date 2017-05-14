@@ -35,11 +35,8 @@ public class BaseHeaderHelper extends NeedInitViewHelper<IBaseHeaderContact.IBas
     public TextView initTitleView() {
         TextView tvTitle = null;
         try {
-            if (mRoot == null) {
-                tvTitle = (TextView) mBaseView.getAFContext().findViewById(mBaseView.getTitleViewId());
-            } else {
-                tvTitle = (TextView) mRoot.findViewById(mBaseView.getTitleViewId());
-            }
+            tvTitle = getView(mBaseView.getTitleViewId());
+
             tvTitle.setText(mBaseView.getTitleText());
             tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -58,11 +55,8 @@ public class BaseHeaderHelper extends NeedInitViewHelper<IBaseHeaderContact.IBas
     public View initBackView() {
         View vBack = null;
         try {
-            if (mRoot == null) {
-                vBack = mBaseView.getAFContext().findViewById(mBaseView.getBackViewId());
-            } else {
-                vBack = mRoot.findViewById(mBaseView.getBackViewId());
-            }
+            vBack = getView(mBaseView.getBackViewId());
+
             vBack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -6,4 +6,7 @@
     <!--refresh-->
     <item name="pre_refresh" type="id"/>
     <item name="pre_recycler_view" type="id"/>
+    <!--TabPager-->
+    <item name="pre_tab_layout" type="id"/>
+    <item name="pre_pager" type="id"/>
 </resources>

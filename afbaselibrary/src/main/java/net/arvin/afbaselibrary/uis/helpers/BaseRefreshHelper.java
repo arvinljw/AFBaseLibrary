@@ -30,11 +30,8 @@ public class BaseRefreshHelper<T extends IBaseRefreshContact.IBaseRefreshView> e
     @Override
     public PtrFrameLayout initRefreshLayout() {
         try {
-            if (mRoot == null) {
-                mRefreshLayout = (PtrFrameLayout) mBaseView.getAFContext().findViewById(mBaseView.getRefreshId());
-            } else {
-                mRefreshLayout = (PtrFrameLayout) mRoot.findViewById(mBaseView.getRefreshId());
-            }
+            mRefreshLayout = getView(mBaseView.getRefreshId());
+
         } catch (Exception e) {
             AFLog.d("未设置PtrFrameLayout的ID为pre_refresh");
         }
