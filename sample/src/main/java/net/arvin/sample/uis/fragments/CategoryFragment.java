@@ -2,18 +2,21 @@ package net.arvin.sample.uis.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.widget.PopupWindowCompat;
+import android.view.View;
+import android.widget.PopupWindow;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import net.arvin.afbaselibrary.data.AFConstant;
 import net.arvin.afbaselibrary.nets.ApiCallback;
-import net.arvin.afbaselibrary.uis.activities.BaseRefreshLoadActivity;
 import net.arvin.afbaselibrary.uis.fragments.BaseRefreshLoadFragment;
 import net.arvin.sample.R;
 import net.arvin.sample.entities.CategoryEntity;
 import net.arvin.sample.nets.GankService;
 import net.arvin.sample.uis.adapters.CategoryListAdapter;
+import net.arvin.sample.uis.dialogs.TipsDialog;
 
 import java.util.List;
 
@@ -24,6 +27,7 @@ import java.util.List;
  */
 public class CategoryFragment extends BaseRefreshLoadFragment<CategoryEntity> {
     private String type;
+    private TipsDialog tipsDialog;
 
     public CategoryFragment() {
     }
@@ -70,6 +74,20 @@ public class CategoryFragment extends BaseRefreshLoadFragment<CategoryEntity> {
                 refreshLoadComplete(isSuccess(categoryEntities));
             }
         });
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
+        if (tipsDialog == null) {
+            tipsDialog = new TipsDialog(getAFContext());
+        }
+        tipsDialog.setMessage("item->" + position + " clicked,is showing position").setOnLeftClickListener("确定", new TipsDialog.OnLeftClickListener() {
+            @Override
+            public void onLeftClicked(View v) {
+                showToast("item->" + position + " clicked!");
+            }
+        }).setOnRightClickListener("取消", null);
+        tipsDialog.show();
     }
 
     @Override

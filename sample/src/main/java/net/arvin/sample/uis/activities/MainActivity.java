@@ -2,6 +2,7 @@ package net.arvin.sample.uis.activities;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -10,7 +11,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import net.arvin.afbaselibrary.uis.activities.BaseActivity;
 import net.arvin.afbaselibrary.uis.activities.BaseRefreshLoadActivity;
 import net.arvin.afbaselibrary.uis.helpers.IBaseContact;
+import net.arvin.afbaselibrary.utils.AFSizeUtil;
 import net.arvin.sample.R;
+import net.arvin.sample.uis.dialogs.TipsPopupWindow;
 import net.arvin.sample.uis.fragments.HeaderFragment;
 
 /**
@@ -19,7 +22,7 @@ import net.arvin.sample.uis.fragments.HeaderFragment;
  * Desc：首页，这个界面退出就是桌面即在栈底，所以需要重写onBackPressed方法，去掉向右关闭的动画
  * 在style方面若是使用了右滑关闭功能，那么应该想这个例子一样，Application的theme设为窗口透明，栈底界面的theme应设为不透明
  */
-public class MainActivity extends BaseRefreshLoadActivity<Class> {
+public class MainActivity extends BaseRefreshLoadActivity<Class> implements BaseQuickAdapter.OnItemLongClickListener {
 
     @Override
     public int getContentView() {
@@ -39,6 +42,8 @@ public class MainActivity extends BaseRefreshLoadActivity<Class> {
     @Override
     public void initViews(Bundle savedInstanceState) {
         autoRefresh();
+
+        mAdapter.setOnItemLongClickListener(this);
     }
 
     @Override
@@ -76,4 +81,10 @@ public class MainActivity extends BaseRefreshLoadActivity<Class> {
         finish();
     }
 
+    @Override
+    public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+        TipsPopupWindow tipsPopupWindow = new TipsPopupWindow(this, findViewById(R.id.v_temp));
+        tipsPopupWindow.showAtBottomLeft(AFSizeUtil.dp2px(16), -AFSizeUtil.dp2px(16));
+        return true;
+    }
 }

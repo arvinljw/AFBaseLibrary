@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_tips_title"
+        style="@style/text_big_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/spacing_default"
+        android:text="提示"
+        />
+
+    <TextView
+        android:id="@+id/tv_tips_message"
+        style="@style/text_normal.secondary"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:gravity="center"
+        android:text="消息内容"
+        />
+
+    <include layout="@layout/layout_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btn_left"
+            style="@style/text_normal"
+            android:layout_weight="1"
+            android:background="@drawable/af_bg_item"
+            android:gravity="center"
+            android:padding="@dimen/spacing_twelve"
+            android:text="left"
+            />
+
+        <View
+            android:layout_width="@dimen/spacing_divider"
+            android:layout_height="match_parent"
+            android:background="@color/black_divider"
+            />
+
+        <TextView
+            android:id="@+id/btn_right"
+            style="@style/text_normal"
+            android:layout_weight="1"
+            android:background="@drawable/af_bg_item"
+            android:gravity="center"
+            android:padding="@dimen/spacing_twelve"
+            android:text="right"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

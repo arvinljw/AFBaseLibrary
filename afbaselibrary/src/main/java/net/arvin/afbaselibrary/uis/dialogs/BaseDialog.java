@@ -6,12 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import net.arvin.afbaselibrary.R;
+import net.arvin.afbaselibrary.data.AFConstant;
 import net.arvin.afbaselibrary.utils.AFSizeUtil;
 
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by arvinljw on 17/5/15 01:38
@@ -20,12 +21,10 @@ import butterknife.Unbinder;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class BaseDialog extends Dialog {
-    private Unbinder unbind;
-
     public BaseDialog(@NonNull Context context, @StyleRes int themeResId) {
         super(context, themeResId);
         setContentView(getContentView());
-        unbind = ButterKnife.bind(this);
+        ButterKnife.bind(this);
 
         resetDialogSize();
 
@@ -60,10 +59,12 @@ public abstract class BaseDialog extends Dialog {
         }
     }
 
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        unbind.unbind();
+    protected void showToast(String message) {
+        int during = Toast.LENGTH_SHORT;
+        if (message.length() > AFConstant.TOAST_LONG_MESSAGE_LENGTH) {
+            during = Toast.LENGTH_LONG;
+        }
+        Toast.makeText(getContext(), message, during).show();
     }
 
     protected abstract int getContentView();

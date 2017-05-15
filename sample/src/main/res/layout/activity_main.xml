@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/v_temp"
+        android:layout_height="0dp"/>
+
     <include layout="@layout/layout_header"/>
 
     <include layout="@layout/layout_refresh_load"/>

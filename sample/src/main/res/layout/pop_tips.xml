@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white_normal"
+              android:orientation="vertical"
+              android:padding="@dimen/spacing_default">
+
+    <TextView
+        android:id="@+id/tv_tips_title"
+        style="@style/text_big_content"
+        android:layout_gravity="center_horizontal"
+        android:text="提示"
+        />
+
+    <TextView
+        android:id="@+id/tv_tips_message"
+        style="@style/text_normal.secondary"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:gravity="center"
+        android:text="消息内容"
+        />
+
+</LinearLayout>
