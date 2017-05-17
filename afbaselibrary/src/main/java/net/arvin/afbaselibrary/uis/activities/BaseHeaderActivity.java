@@ -13,10 +13,10 @@ import net.arvin.afbaselibrary.utils.AFLog;
 
 /**
  * Created by arvinljw on 17/5/11 17:01
- * Function：有的标题Activity
+ * Function：有的标题Activity，支持右滑返回，也可禁止该功能，具体请参考{@link BaseSwipeBackActivity}
  * Desc：根据项目中的情况来看一般就只有返回按钮和标题，更多的就自行情况扩展吧
  */
-public abstract class BaseHeaderActivity extends BaseActivity implements IBaseHeaderContact.IBaseHeaderView {
+public abstract class BaseHeaderActivity extends BaseSwipeBackActivity implements IBaseHeaderContact.IBaseHeaderView {
     protected TextView tvTitle;
     protected View vBack;
 

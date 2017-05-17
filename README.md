@@ -36,6 +36,10 @@
 * [BaseTabPagerView](readme/BaseTabPagerView.md)（TabLayout和ViewPager的结合）
 * [BaseHtmlView](readme/BaseHtmlView.md)（WebView的封装）
 
+这里再给出一张这些类的继承关系结构图：
+
+![](images/AFLibViewsStruct.png)
+
 每个界面，采用了面向接口编程，由于既有Activity又有Fragment，为了避免写的实现代码，所以我又抽取了对应的Helper去封装，而Helper提供的一些和界面类似的方法，只是为了提供一个default的值，而界面中的方法是为了让子类继承后可重写，方便修改。
 
 *注：这种设计方法是我自己想的，感觉还差点什么，因为细心的同学能很快发现其实，Activity和Fragment中的代码几乎是一样的，只是继承的对象不同而已，但是因为目前还不知如何去更好的处理这种情况，如果哪位仁兄有高见可随时联系我，或者提issue。*

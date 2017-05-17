@@ -41,6 +41,8 @@ public class MainActivity extends BaseRefreshLoadActivity<Class> implements Base
 
     @Override
     public void initViews(Bundle savedInstanceState) {
+        setSwipeBackEnable(false);
+
         autoRefresh();
 
         mAdapter.setOnItemLongClickListener(this);
