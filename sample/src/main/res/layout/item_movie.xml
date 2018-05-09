@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/af_bg_item"
+                android:padding="@dimen/spacing_twelve">
+
+    <ImageView
+        android:id="@+id/img_article"
+        android:layout_width="@dimen/spacing_eighty"
+        android:layout_height="@dimen/spacing_eighty"
+        android:layout_marginRight="@dimen/spacing_twelve"
+        android:src="@drawable/img_loading"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_four"
+        android:layout_toRightOf="@id/img_article"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="name"
+        android:textColor="@color/black_87"
+        android:textSize="@dimen/sp_16"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_toRightOf="@id/img_article"
+        android:text="类型"
+        android:textColor="@color/black_secondary"
+        android:textSize="@dimen/sp_14"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_type"
+        android:layout_toRightOf="@id/img_article"
+        android:text="评分"
+        android:textColor="@color/black_secondary"
+        android:textSize="@dimen/sp_14"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_score"
+        android:layout_toRightOf="@id/img_article"
+        android:text="描述"
+        android:textColor="@color/black_secondary"
+        android:textSize="@dimen/sp_14"
+        />
+
+    <TextView
+        android:id="@+id/tv_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="@dimen/spacing_four"
+        android:text="1"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/sp_16"
+        />
+
+</RelativeLayout>

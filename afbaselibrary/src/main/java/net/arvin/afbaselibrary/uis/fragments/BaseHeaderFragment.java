@@ -4,19 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import net.arvin.afbaselibrary.uis.helpers.BaseHeaderHelper;
-import net.arvin.afbaselibrary.uis.helpers.IBaseHeaderContact;
+import net.arvin.afbaselibrary.R;
+import net.arvin.afbaselibrary.utils.AFLog;
 
 /**
  * Created by arvinljw on 17/5/11 17:19
  * Function：带标题的Fragment
  * Desc：功能与代表提的Activity一致，但是在实际中应该用的较少
  */
-public abstract class BaseHeaderFragment extends BaseFragment implements IBaseHeaderContact.IBaseHeaderView {
+public abstract class BaseHeaderFragment extends BaseFragment{
     protected TextView tvTitle;
     protected View vBack;
-
-    private BaseHeaderHelper mBaseHeaderHelper;
 
     @Override
     public void init(Bundle savedInstanceState) {
@@ -24,39 +22,66 @@ public abstract class BaseHeaderFragment extends BaseFragment implements IBaseHe
         initHeader(savedInstanceState);
     }
 
-    @Override
-    public void initHeader(Bundle savedInstanceState) {
-        mBaseHeaderHelper = new BaseHeaderHelper(this, mRoot);
-        tvTitle = mBaseHeaderHelper.initTitleView();
-        vBack = mBaseHeaderHelper.initBackView();
+    protected void initHeader(Bundle savedInstanceState) {
+        initTitleView();
+        initBackView();
     }
 
-    @Override
-    public int getTitleViewId() {
-        return mBaseHeaderHelper.getTitleViewId();
+    protected void initTitleView() {
+        try {
+            tvTitle = root.findViewById(getTitleViewId());
+
+            tvTitle.setText(getTitleText());
+            tvTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onTitleViewClicked(v);
+                }
+            });
+            tvTitle.setVisibility(isShowTitleView() ? View.VISIBLE : View.GONE);
+        } catch (Exception e) {
+            AFLog.w("未设置标题id~");
+        }
     }
 
-    @Override
-    public int getBackViewId() {
-        return mBaseHeaderHelper.getBackViewId();
+    protected void initBackView() {
+        try {
+            vBack = root.findViewById(getBackViewId());
+
+            vBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackViewClicked(v);
+                }
+            });
+            vBack.setVisibility(isShowBackView() ? View.VISIBLE : View.GONE);
+        } catch (Exception e) {
+            AFLog.w("未设置返回图标id~");
+        }
     }
 
-    @Override
-    public boolean isShowBackView() {
+    protected int getTitleViewId() {
+        return R.id.pre_tv_title;
+    }
+
+    protected int getBackViewId() {
+        return R.id.pre_v_back;
+    }
+
+    protected boolean isShowBackView() {
         return true;
     }
 
-    @Override
-    public boolean isShowTitleView() {
+    protected boolean isShowTitleView() {
         return true;
     }
 
-    @Override
-    public void onTitleViewClicked(View view) {
+    protected void onTitleViewClicked(View view) {
     }
 
-    @Override
-    public void onBackViewClicked(View view) {
-        getActivity().onBackPressed();
+    protected void onBackViewClicked(View view) {
+        getAFContext().onBackPressed();
     }
+
+    protected abstract String getTitleText();
 }

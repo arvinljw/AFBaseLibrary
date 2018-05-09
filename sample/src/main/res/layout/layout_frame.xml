@@ -4,6 +4,10 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/template_layout_tab"/>
+    <include layout="@layout/layout_header"/>
 
+    <FrameLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

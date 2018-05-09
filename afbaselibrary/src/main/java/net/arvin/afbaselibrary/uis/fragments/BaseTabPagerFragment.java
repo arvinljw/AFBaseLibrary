@@ -1,14 +1,14 @@
 package net.arvin.afbaselibrary.uis.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 
 import com.flyco.tablayout.SlidingTabLayout;
+import com.flyco.tablayout.listener.OnTabSelectListener;
 
-import net.arvin.afbaselibrary.uis.activities.BaseHeaderActivity;
-import net.arvin.afbaselibrary.uis.helpers.BaseTabPagerHelper;
-import net.arvin.afbaselibrary.uis.helpers.IBaseTabPageContact;
+import net.arvin.afbaselibrary.R;
+import net.arvin.afbaselibrary.data.AFConstant;
+import net.arvin.afbaselibrary.uis.adapters.PagerFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +18,11 @@ import java.util.List;
  * Function：
  * Desc：
  */
-public abstract class BaseTabPagerFragment<T extends IBaseTabPageContact.IPageTitle> extends BaseHeaderFragment implements IBaseTabPageContact.IBaseTabPageView<T> {
+public abstract class BaseTabPagerFragment<T extends PagerFragmentAdapter.IPageTitle> extends BaseHeaderFragment implements PagerFragmentAdapter.IPageContent, OnTabSelectListener {
 
     protected SlidingTabLayout mTabLayout;
     protected ViewPager mPager;
     protected List<T> mItems = new ArrayList<>();
-
-    private BaseTabPagerHelper<T> mBaseTabPagerHelper;
 
     @Override
     public void initHeader(Bundle savedInstanceState) {
@@ -32,43 +30,33 @@ public abstract class BaseTabPagerFragment<T extends IBaseTabPageContact.IPageTi
         initTabPager(savedInstanceState);
     }
 
-    @Override
-    public void initTabPager(Bundle savedInstanceState) {
-        mBaseTabPagerHelper = new BaseTabPagerHelper<>(this);
-
-        mTabLayout = mBaseTabPagerHelper.setTabLayout();
-        mPager = mBaseTabPagerHelper.setPager();
-        getData();
+    protected void initTabPager(Bundle savedInstanceState) {
+        mTabLayout = root.findViewById(getTabId());
+        mPager = root.findViewById(getPagerId());
+        loadData();
     }
 
-    @Override
-    public int getTabId() {
-        return mBaseTabPagerHelper.getDefaultTabId();
+    protected int getTabId() {
+        return R.id.pre_tab_layout;
     }
 
-    @Override
-    public int getPagerId() {
-        return mBaseTabPagerHelper.getDefaultPageId();
+    protected int getPagerId() {
+        return R.id.pre_pager;
     }
 
-    @Override
-    public FragmentManager getAFFragmentManager() {
-        return getChildFragmentManager();
+    protected void createPager() {
+        mPager.setAdapter(new PagerFragmentAdapter<T>(getChildFragmentManager(), mItems, this));
+
+        mPager.setOffscreenPageLimit(AFConstant.PAGE_CACHE_SIZE);
+
+        setTabSpaceEqual();
+
+        mTabLayout.setViewPager(mPager);
+        mTabLayout.setOnTabSelectListener(this);
     }
 
-    @Override
-    public void createPager() {
-        mBaseTabPagerHelper.createPager();
-    }
-
-    @Override
-    public List<T> getItems() {
-        return mItems;
-    }
-
-    @Override
-    public void setTabSpaceEqual() {
-        mBaseTabPagerHelper.setDefaultTabSpaceEqual();
+    protected void setTabSpaceEqual() {
+        mTabLayout.setTabSpaceEqual(mItems.size() < AFConstant.PAGE_CACHE_SIZE);
     }
 
     @Override
@@ -78,6 +66,8 @@ public abstract class BaseTabPagerFragment<T extends IBaseTabPageContact.IPageTi
     @Override
     public void onTabReselect(int position) {
     }
+
+    protected abstract void loadData();
 
 
 }

@@ -1,15 +1,25 @@
 package net.arvin.afbaselibrary.uis.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import net.arvin.afbaselibrary.R;
-import net.arvin.afbaselibrary.uis.helpers.BaseHelper;
-import net.arvin.afbaselibrary.uis.helpers.IBaseContact;
+import net.arvin.afbaselibrary.data.AFConstant;
+import net.arvin.afbaselibrary.data.AFKillAllActivityEvent;
+import net.arvin.afbaselibrary.nets.BaseNetService;
+import net.arvin.afbaselibrary.utils.AFLog;
+import net.arvin.afbaselibrary.utils.AFPermissionUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -21,98 +31,123 @@ import butterknife.Unbinder;
  * Function：公共部分
  * Desc：包含权限申请，加载数据提示框，Toast，View注解，状态栏控制等
  */
-public abstract class BaseActivity extends AppCompatActivity implements IBaseContact.IBaseView {
-    private BaseHelper mBaseHelper;
+public abstract class BaseActivity extends AppCompatActivity implements AFPermissionUtil.PermissionCallbacks {
     private Unbinder unbinder;
+    private ProgressDialog progressDialog;
+    private AFPermissionUtil.IRequestPermissionCallback mPermissionCallback;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentView());
+        EventBus.getDefault().register(this);
         unbinder = ButterKnife.bind(this);
-        mBaseHelper = new BaseHelper(this);
         init(savedInstanceState);
         initViews(savedInstanceState);
     }
 
-    @Override
-    public FragmentActivity getAFContext() {
+    protected FragmentActivity getAFContext() {
         return this;
     }
 
-    @Override
-    public void init(Bundle savedInstanceState) {
+    protected void init(Bundle savedInstanceState) {
     }
 
-    @Override
-    public void controlStatusBar() {
+    protected void controlStatusBar() {
     }
 
-    @Override
-    public void showToast(String message) {
-        mBaseHelper.showToast(message);
+    protected void showToast(String message) {
+        if (getAFContext() == null || TextUtils.isEmpty(message)) {
+            return;
+        }
+        int during = Toast.LENGTH_SHORT;
+        if (message.length() > AFConstant.TOAST_LONG_MESSAGE_LENGTH) {
+            during = Toast.LENGTH_LONG;
+        }
+        Toast.makeText(getAFContext(), message, during).show();
     }
 
-    @Override
-    public void showProgressDialog(String message) {
-        mBaseHelper.showProgressDialog(message);
+    protected void showProgressDialog(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getAFContext());
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+        }
+        progressDialog.setMessage(message != null ? message : "");
+        progressDialog.show();
     }
 
-    @Override
-    public void hideProgressDialog() {
-        mBaseHelper.hideProgressDialog();
+    protected void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
-    @Override
-    public void startActivity(Class clazz) {
+    protected void startActivity(Class clazz) {
         startActivity(clazz, null);
     }
 
-    @Override
-    public void startActivity(Class clazz, Bundle bundle) {
-        mBaseHelper.startActivity(clazz, bundle);
+    protected void startActivity(Class clazz, Bundle bundle) {
+        Intent intent = new Intent(getAFContext(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
+        getAFContext().overridePendingTransition(R.anim.af_right_in, 0);
     }
 
-    @Override
-    public void startActivityForResult(Class clazz, int requestCode) {
-        startActivityForResult(clazz, null, requestCode);
+    protected void startActivityForResult(int requestCode, Class clazz) {
+        startActivityForResult(requestCode, clazz, null);
     }
 
-    @Override
-    public void startActivityForResult(Class clazz, Bundle bundle, int requestCode) {
-        mBaseHelper.startActivityForResult(clazz, bundle, requestCode);
+    protected void startActivityForResult(int requestCode, Class clazz, Bundle bundle) {
+        Intent intent = new Intent(getAFContext(), clazz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivityForResult(intent, requestCode);
+        getAFContext().overridePendingTransition(R.anim.af_right_in, 0);
     }
 
-    @Override
-    public void requestPermission(IBaseContact.IRequestPermissionCallback permissionCallback, String reqStr, String... permissions) {
-        mBaseHelper.requestPermission(permissionCallback, reqStr, permissions);
+    protected void requestPermission(AFPermissionUtil.IRequestPermissionCallback permissionCallback, String reqStr, String... permissions) {
+        mPermissionCallback = permissionCallback;
+        if (AFPermissionUtil.hasPermissions(getAFContext(), permissions)) {
+            onPermissionsAllGranted();
+        } else {
+            AFPermissionUtil.requestPermissions(getAFContext(), reqStr, AFConstant.PERMISSION_REQUEST_CODE, permissions);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mBaseHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AFPermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, getAFContext());
     }
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        mBaseHelper.onPermissionsGranted(requestCode, perms);
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        mBaseHelper.onPermissionsDenied(requestCode, perms);
+        AFPermissionUtil.checkDeniedPermissionsNeverAskAgain(getAFContext(),
+                getAFContext().getString(R.string.af_permission_tips), getAFContext().getString(R.string.setting),
+                getAFContext().getString(R.string.cancel), perms);
     }
 
     @Override
     public void onPermissionsAllGranted() {
-        mBaseHelper.onPermissionsAllGranted();
+        if (mPermissionCallback != null) {
+            mPermissionCallback.agreeAll();//同意了全部权限的回调
+            AFLog.w("request permission all agreed");
+        }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mBaseHelper.isPermissionRequestBackFromSetting(requestCode)) {
+        if (requestCode == AFConstant.PERMISSION_OPEN_SETTING_REQUEST_CODE) {
             permissionRequestBackFromSetting();
         }
     }
@@ -129,10 +164,21 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseCon
         overridePendingTransition(0, R.anim.af_right_out);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void finishAllActivityEvent(AFKillAllActivityEvent event){
+        finish();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBaseHelper.destroyIt();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
+        BaseNetService.onDestroy(this);
     }
+
+    protected abstract int getContentView();
+
+    protected abstract void initViews(Bundle savedInstanceState);
+
 }

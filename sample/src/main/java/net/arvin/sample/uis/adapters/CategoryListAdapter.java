@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class CategoryListAdapter extends BaseQuickAdapter<CategoryEntity, BaseViewHolder> {
 
-    public CategoryListAdapter(List<CategoryEntity> datas) {
-        super(R.layout.item_category, datas);
+    public CategoryListAdapter(List<CategoryEntity> data) {
+        super(R.layout.item_category, data);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CategoryListAdapter extends BaseQuickAdapter<CategoryEntity, BaseVi
         }
         ImageView ivItem = helper.getView(R.id.iv_item_CategoryAdapter);
         ivItem.setVisibility(View.VISIBLE);
-        AFGlideUtil.loadImage(getRealSizeUrl(url), ivItem);
+//        AFGlideUtil.loadImage(getRealSizeUrl(url), ivItem);
 
         helper.setText(R.id.tv_author_CategoryAdapter, "作者：" + item.getWho());
         helper.setText(R.id.tv_desc_CategoryAdapter, item.getDesc());

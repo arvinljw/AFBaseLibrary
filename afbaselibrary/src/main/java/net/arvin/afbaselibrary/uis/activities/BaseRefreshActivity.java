@@ -1,63 +1,54 @@
 package net.arvin.afbaselibrary.uis.activities;
 
 import android.os.Bundle;
-import android.view.View;
 
-import net.arvin.afbaselibrary.uis.helpers.BaseRefreshHelper;
-import net.arvin.afbaselibrary.uis.helpers.IBaseRefreshContact;
+import com.scwang.smartrefresh.header.MaterialHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import in.srain.cube.views.ptr.PtrFrameLayout;
+import net.arvin.afbaselibrary.R;
+import net.arvin.afbaselibrary.data.AFConstant;
+import net.arvin.afbaselibrary.utils.AFLog;
 
 /**
  * Created by arvinljw on 17/5/11 19:12
  * Function：带有下拉刷新的Activity
  * Desc：当只需要提供下拉刷新的界面
  */
-public abstract class BaseRefreshActivity extends BaseHeaderActivity implements IBaseRefreshContact.IBaseRefreshView {
-    protected PtrFrameLayout mRefreshLayout;
-
-    private BaseRefreshHelper<IBaseRefreshContact.IBaseRefreshView> mRefreshHelper;
+public abstract class BaseRefreshActivity extends BaseHeaderActivity implements OnRefreshListener {
+    protected SmartRefreshLayout mRefreshLayout;
 
     @Override
-    public void initHeader(Bundle savedInstanceState) {
+    protected void initHeader(Bundle savedInstanceState) {
         super.initHeader(savedInstanceState);
         initRefresh(savedInstanceState);
     }
 
-    @Override
-    public void initRefresh(Bundle saveInstanceStatus) {
-        mRefreshHelper = new BaseRefreshHelper<IBaseRefreshContact.IBaseRefreshView>(this);
-        mRefreshLayout = mRefreshHelper.initRefreshLayout();
+    protected void initRefresh(Bundle saveInstanceStatus) {
+        try {
+            mRefreshLayout = findViewById(getRefreshId());
+            mRefreshLayout.setOnRefreshListener(this);
+        } catch (Exception e) {
+            throw new RuntimeException("未设置SmartRefreshLayout的ID为pre_refresh");
+        }
         setRefreshHeader();
     }
 
-    @Override
-    public PtrFrameLayout getRefreshLayout() {
-        return mRefreshLayout;
+    protected int getRefreshId() {
+        return R.id.pre_refresh;
     }
 
-    @Override
-    public int getRefreshId() {
-        return mRefreshHelper.getDefaultRefreshId();
+    protected void setRefreshHeader() {
+        mRefreshLayout.setRefreshHeader(new MaterialHeader(getAFContext()));
     }
 
-    @Override
-    public void setRefreshHeader() {
-        mRefreshHelper.setRefreshHeader();
+    protected void autoRefresh() {
+        mRefreshLayout.autoRefresh();
     }
 
-    @Override
-    public void autoRefresh() {
-        mRefreshHelper.autoRefresh();
-    }
-
-    @Override
-    public void refreshComplete() {
-        mRefreshHelper.refreshComplete();
-    }
-
-    @Override
-    public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-        return mRefreshHelper.checkCanDoRefresh(frame, content, header);
+    protected void refreshComplete() {
+        mRefreshLayout.finishRefresh(AFConstant.REFRESH_ANIMATION_TIME);
+        mRefreshLayout.finishLoadMoreWithNoMoreData();
     }
 }

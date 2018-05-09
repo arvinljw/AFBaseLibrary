@@ -260,4 +260,7 @@ public class AFPermissionUtil {
         }
     }
 
+    public interface IRequestPermissionCallback {
+        void agreeAll();
+    }
 }

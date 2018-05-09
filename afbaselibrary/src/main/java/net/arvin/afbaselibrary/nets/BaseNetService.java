@@ -1,13 +1,12 @@
 package net.arvin.afbaselibrary.nets;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by arvinljw on 17/5/14 23:01
@@ -15,37 +14,33 @@ import rx.subscriptions.CompositeSubscription;
  * Desc：
  */
 public class BaseNetService {
+    private static Map<Object, ApiCallback> callbacks = new HashMap<>();
 
-    private Map<Class, CompositeSubscription> mCompositeSubscriptions;
-
-    public BaseNetService() {
-        mCompositeSubscriptions = new HashMap<>();
+    protected static <T> void subscribe(Observable<T> observable, ApiCallback<T> callback) {
+        addApi(callback);
+        ioMain(observable).subscribe(callback);
     }
 
-    protected  <K> Observable<K> addSchedulers(Observable<K> observable) {
+    private static void addApi(ApiCallback callback) {
+        removeCallback(callback.obj);
+        callbacks.put(callback.obj, callback);
+    }
+
+    private static <T> Observable<T> ioMain(Observable<T> observable) {
         return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
-    protected void addCompositeSub(Subscription subscription) {
-        CompositeSubscription compositeSubscription = mCompositeSubscriptions.get(getClass());
-        if (compositeSubscription == null) {
-            compositeSubscription = new CompositeSubscription();
-            mCompositeSubscriptions.put(getClass(), compositeSubscription);
+    private static void removeCallback(Object obj) {
+        if (callbacks == null) {
+            return;
         }
-        compositeSubscription.add(subscription);
-    }
-
-    private void removeCompositeSub() {
-        CompositeSubscription compositeSubscription;
-        if (mCompositeSubscriptions != null && mCompositeSubscriptions.get(getClass()) != null) {
-            compositeSubscription = mCompositeSubscriptions.get(getClass());
-            compositeSubscription.unsubscribe();
-            mCompositeSubscriptions.remove(getClass());
+        if (callbacks.containsKey(obj)) {
+            callbacks.get(obj).cancelCall();
+            callbacks.remove(obj);
         }
     }
 
-    public void onDestroy() {
-        removeCompositeSub();
+    public static void onDestroy(Object obj) {
+        removeCallback(obj);
     }
-
 }

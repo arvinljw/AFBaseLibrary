@@ -6,8 +6,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 
-import net.arvin.afbaselibrary.utils.AFLog;
 import net.arvin.afbaselibrary.utils.AFCertificateUtil;
+import net.arvin.afbaselibrary.utils.AFLog;
+
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +24,7 @@ import okhttp3.Response;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -32,74 +34,74 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class BaseNet<T> {
-    private T mDefaultApi;
-    private Class<T> mDefaultApiClazz;
+    private T defaultApi;
+    private Class<T> defaultApiClazz;
 
-    protected OkHttpClient mHttpClient;
-    protected CallAdapter.Factory mRxJavaCallAdapterFactory;
-    protected Converter.Factory mConverterFactory;
+    protected OkHttpClient httpClient;
+    protected CallAdapter.Factory rxJavaCallAdapterFactory;
+    protected Converter.Factory converterFactory;
 
-    protected Map<String, String> mHeaders;
+    protected Map<String, String> headers;
 
-    protected Map<Class, Object> mApis;
+    protected Map<Class, Object> apis;
 
     @SuppressWarnings("unchecked")
     protected BaseNet() {
-        mHeaders = new HashMap<>();
-        mApis = new HashMap<>();
+        headers = new HashMap<>();
+        apis = new HashMap<>();
         //默认的api的class对象，因为用到了泛型所以这个值肯定是会随着T的改变而改变，所以没必要重写
-        mDefaultApiClazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        defaultApiClazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     public T getDefaultApi() {
-        if (mDefaultApi == null) {
+        if (defaultApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(getHttpClient())
                     .baseUrl(getDefaultBaseUrl())
                     .addConverterFactory(getDefaultConvertFactory())
                     .addCallAdapterFactory(getDefaultCallAdapterFactory())
                     .build();
-            mDefaultApi = retrofit.create(mDefaultApiClazz);
+            defaultApi = retrofit.create(defaultApiClazz);
         }
-        return mDefaultApi;
+        return defaultApi;
     }
 
     /**
      * 默认使用Gson转换器，可以根据后台情况约定返回类型，并自定义转换器
      */
     protected Converter.Factory getDefaultConvertFactory() {
-        if (mConverterFactory == null) {
-            mConverterFactory = GsonConverterFactory.create();
+        if (converterFactory == null) {
+            converterFactory = GsonConverterFactory.create();
         }
-        return mConverterFactory;
+        return converterFactory;
     }
 
     /**
      * 默认使用rxjava call adapter，和{@link BaseNetService}结合使用，可避免rx引起的内存泄漏问题
      */
     protected CallAdapter.Factory getDefaultCallAdapterFactory() {
-        if (mRxJavaCallAdapterFactory == null) {
-            mRxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
+        if (rxJavaCallAdapterFactory == null) {
+            rxJavaCallAdapterFactory = RxJava2CallAdapterFactory.create();
         }
-        return mRxJavaCallAdapterFactory;
+        return rxJavaCallAdapterFactory;
     }
 
     @SuppressWarnings("ConstantConditions")
     protected OkHttpClient getHttpClient() {
-        if (mHttpClient == null) {
+        if (httpClient == null) {
             OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().addInterceptor(getDefaultInterceptor());
             if (isHttpsRequest()) {
                 try {
                     clientBuilder.sslSocketFactory(AFCertificateUtil.setCertificates(getApplicationContext(), getCertificateNames()))
-                            .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                            .hostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            mHttpClient = clientBuilder.build();
+            httpClient = clientBuilder.build();
             makeGlideSupportHttps();
         }
-        return mHttpClient;
+        return httpClient;
     }
 
     /**
@@ -111,8 +113,8 @@ public abstract class BaseNet<T> {
             public Response intercept(Chain chain) throws IOException {
                 Request request;
                 Request.Builder requestBuilder = chain.request().newBuilder();
-                for (String key : mHeaders.keySet()) {
-                    requestBuilder.addHeader(key, mHeaders.get(key));
+                for (String key : headers.keySet()) {
+                    requestBuilder.addHeader(key, headers.get(key));
                 }
                 request = requestBuilder.build();
 
@@ -136,7 +138,7 @@ public abstract class BaseNet<T> {
      * @param response 对请求结果的处理，默认打印请求和返回信息
      */
     protected void dealResponse(Response response) {
-        AFLog.d(response.request() + "\n" + response);
+        AFLog.w(response.request() + "\n" + response);
     }
 
     /**
@@ -170,16 +172,16 @@ public abstract class BaseNet<T> {
      */
     @SuppressWarnings("unchecked")
     protected <K> K getApi(Class<K> clazz) {
-        if (mApis.containsKey(clazz)) {
-            return (K) mApis.get(clazz);
+        if (apis.containsKey(clazz)) {
+            return (K) apis.get(clazz);
         }
         K api = new Retrofit.Builder()
                 .client(getHttpClient())
                 .baseUrl(getDefaultBaseUrl())
-                .addConverterFactory(mConverterFactory)
+                .addConverterFactory(converterFactory)
                 .addCallAdapterFactory(getDefaultCallAdapterFactory())
                 .build().create(clazz);
-        mApis.put(clazz, api);
+        apis.put(clazz, api);
         return api;
     }
 
@@ -187,7 +189,8 @@ public abstract class BaseNet<T> {
         if (!isHttpsRequest()) {
             return;
         }
-        Glide.get(getApplicationContext()).register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(mHttpClient));
+        Glide.get(getApplicationContext()).register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(httpClient));
+
     }
 
     /**

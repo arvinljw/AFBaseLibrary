@@ -16,7 +16,7 @@ if (childCount > 2) {
 
 如果调用便可自动回调onRefreshBegin方法，同时会把Header显示出来;
 
-**2、onRefreshBegin**
+**2、onRefresh**
 
 这个方法会要求我们重写，我们就可以在这个方法中刷新数据;
 

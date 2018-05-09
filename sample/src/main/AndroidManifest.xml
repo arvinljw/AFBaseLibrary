@@ -16,6 +16,8 @@
 
         <activity
             android:name=".uis.activities.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,6 +27,8 @@
         </activity>
 
         <activity android:name=".uis.activities.TabDemoActivity"/>
+        <activity android:name=".uis.activities.HtmlActivity"/>
+        <activity android:name=".uis.activities.DoubanMovieListActivity"/>
 
     </application>
 

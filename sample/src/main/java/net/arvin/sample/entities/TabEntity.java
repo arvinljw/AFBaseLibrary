@@ -1,14 +1,14 @@
 package net.arvin.sample.entities;
 
 
-import net.arvin.afbaselibrary.uis.helpers.IBaseTabPageContact;
+import net.arvin.afbaselibrary.uis.adapters.PagerFragmentAdapter;
 
 /**
  * Created by arvin on 17/5/14 00:25
  * Function：
  * Desc：
  */
-public class TabEntity implements IBaseTabPageContact.IPageTitle {
+public class TabEntity implements PagerFragmentAdapter.IPageTitle {
     private String title;
     private String type;
 

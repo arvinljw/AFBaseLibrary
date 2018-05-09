@@ -6,7 +6,7 @@
 
     <include layout="@layout/layout_header"/>
 
-    <!--<include layout="@layout/layout_refresh_load"/>-->
+    <!--<include layout="@layout/template_layout_refresh_load"/>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pre_recycler_view"

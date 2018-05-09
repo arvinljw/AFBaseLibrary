@@ -1,20 +1,15 @@
 package net.arvin.sample.uis.activities;
 
-import android.Manifest;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import net.arvin.afbaselibrary.uis.activities.BaseActivity;
 import net.arvin.afbaselibrary.uis.activities.BaseRefreshLoadActivity;
-import net.arvin.afbaselibrary.uis.helpers.IBaseContact;
 import net.arvin.afbaselibrary.utils.AFSizeUtil;
 import net.arvin.sample.R;
 import net.arvin.sample.uis.dialogs.TipsPopupWindow;
-import net.arvin.sample.uis.fragments.HeaderFragment;
 
 /**
  * Created by arvinljw on 17/5/10 12:51
@@ -67,8 +62,7 @@ public class MainActivity extends BaseRefreshLoadActivity<Class> implements Base
 
                 mItems.add(TabDemoActivity.class);
 
-
-                refreshLoadComplete(false);
+                refreshLoadComplete(true, false);
             }
         }, 500);
     }

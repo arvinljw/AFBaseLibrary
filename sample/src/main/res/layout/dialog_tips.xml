@@ -23,7 +23,7 @@
         android:text="消息内容"
         />
 
-    <include layout="@layout/layout_divider"/>
+    <include layout="@layout/template_layout_divider"/>
 
     <LinearLayout
         android:layout_width="match_parent"

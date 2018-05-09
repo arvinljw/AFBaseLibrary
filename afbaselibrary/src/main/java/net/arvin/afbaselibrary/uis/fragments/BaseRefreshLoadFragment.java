@@ -1,21 +1,25 @@
 package net.arvin.afbaselibrary.uis.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 
 import net.arvin.afbaselibrary.R;
-import net.arvin.afbaselibrary.uis.helpers.BaseRefreshLoadHelper;
-import net.arvin.afbaselibrary.uis.helpers.IBaseRefreshLoadContact;
+import net.arvin.afbaselibrary.data.AFConstant;
+import net.arvin.afbaselibrary.uis.views.HorizontalDividerItemDecoration;
 import net.arvin.afbaselibrary.utils.AFLog;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * Created by arvinljw on 17/5/11 22:19
@@ -26,103 +30,131 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
  * 2、列表只支持下拉刷新；
  * 3、列表只支持上拉加载；
  */
-public abstract class BaseRefreshLoadFragment<T> extends BaseRefreshFragment implements IBaseRefreshLoadContact.IBaseRefreshLoadView<T> {
-
+public abstract class BaseRefreshLoadFragment<T> extends BaseRefreshFragment implements OnLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected BaseQuickAdapter<T, BaseViewHolder> mAdapter;
 
     protected List<T> mItems;
-
-    private BaseRefreshLoadHelper<T> mRefreshLoadHelper;
+    protected int mCurrPage = getDefaultFirstPage();
 
     @Override
     public void initRefresh(Bundle saveInstanceStatus) {
         super.initRefresh(saveInstanceStatus);
-        initRefreshLoad(saveInstanceStatus);
+        mRefreshLayout.setOnLoadMoreListener(this);
+        setRefreshFooter();
+        initRecyclerView();
     }
 
-    @Override
-    public void initRefreshLoad(Bundle saveInstanceStatus) {
+    protected void initRecyclerView() {
         mItems = new ArrayList<>();
 
-        mRefreshLoadHelper = new BaseRefreshLoadHelper<>(this, mRoot);
-
-        mRecyclerView = mRefreshLoadHelper.setRecyclerView();
+        mRecyclerView = root.findViewById(getRecyclerViewId());
         setLayoutManager();
         setAdapter();
         addDivider();
     }
 
-    @Override
-    public int getRecyclerViewId() {
-        return mRefreshLoadHelper.getDefaultRecyclerViewId();
+    protected int getRecyclerViewId() {
+        return R.id.pre_recycler_view;
     }
 
-    @Override
-    public void setLayoutManager() {
-        mLayoutManager = mRefreshLoadHelper.getDefaultLayoutManager();
+    protected void setLayoutManager() {
+        mLayoutManager = new LinearLayoutManager(getAFContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    @Override
-    public void setAdapter() {
-        mAdapter = mRefreshLoadHelper.setAdapter();
+    protected void setAdapter() {
+        mAdapter = getAdapter();
+        mAdapter.setEmptyView(setEmptyView());
+        mAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public BaseQuickAdapter<T, BaseViewHolder> getGenerateAdapter() {
-        return mAdapter;
+    protected void setRefreshFooter() {
+        mRefreshLayout.setRefreshFooter(new ClassicsFooter(getAFContext()));
     }
 
-    @Override
-    public List<T> getItems() {
-        return mItems;
+    protected View setEmptyView() {
+        View emptyView = LayoutInflater.from(getAFContext()).inflate(getEmptyLayoutId(), mRecyclerView, false);
+        emptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onEmptyViewClicked(v);
+            }
+        });
+        return emptyView;
     }
 
-    @Override
-    public int getEmptyLayoutId() {
+    protected void onEmptyViewClicked(View view) {
+        autoRefresh();
+    }
+
+    protected int getEmptyLayoutId() {
         return R.layout.af_layout_empty;
     }
 
-    @Override
-    public void addDivider() {
-        mRefreshLoadHelper.addDivider();
+    protected void addDivider() {
+        if (isShowDivider()) {
+            mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getAFContext())
+                    .color(getAFContext().getResources().getColor(R.color.black_divider))
+                    .sizeResId(R.dimen.spacing_divider)
+                    .build());
+        }
     }
 
-    @Override
-    public boolean isShowDivider() {
+    protected boolean isShowDivider() {
         return true;
     }
 
     @Override
-    public void onEmptyViewClicked(View view) {
-        autoRefresh();
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        mCurrPage = AFConstant.REFRESH_FIRST_PAGE;
+        loadData(mCurrPage);
     }
 
     @Override
-    public void onRefreshBegin(PtrFrameLayout frame) {
-        mRefreshLoadHelper.onRefreshBegin(frame);
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        loadData(++mCurrPage);
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-        mRefreshLoadHelper.onLoadMoreRequest();
+    protected void refreshLoadComplete(boolean success, boolean hasNextPage) {
+        if (getAFContext() == null) {
+            return;
+        }
+        if (mCurrPage > AFConstant.REFRESH_FIRST_PAGE) {
+            if (!success) {
+                mCurrPage--;
+            }
+            mRefreshLayout.finishLoadMore(AFConstant.REFRESH_ANIMATION_TIME);
+        } else {
+            mRefreshLayout.finishRefresh(AFConstant.REFRESH_ANIMATION_TIME);
+        }
+        if (!hasNextPage) {
+            mRefreshLayout.finishLoadMoreWithNoMoreData();
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void refreshLoadComplete(boolean success) {
-        mRefreshLoadHelper.refreshLoadComplete(success);
+    protected int getDefaultFirstPage() {
+        return AFConstant.REFRESH_FIRST_PAGE;
     }
 
-    @Override
-    public boolean isSuccess(List<T> backData) {
-        return mRefreshLoadHelper.isSuccess(backData);
+    protected int getDefaultPageSize() {
+        return AFConstant.REFRESH_DEFAULT_SIZE;
+    }
+
+    protected boolean isSuccess(List<T> backData) {
+        return backData != null && backData.size() > 0;
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        AFLog.d("item->" + position + " clicked");
+        AFLog.w("item->" + position + " clicked");
     }
+
+    protected abstract BaseQuickAdapter<T, BaseViewHolder> getAdapter();
+
+    protected abstract void loadData(final int page);
+
 }

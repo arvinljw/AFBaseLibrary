@@ -4,9 +4,9 @@ import net.arvin.sample.entities.CategoryEntity;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * Created by arvinljw on 17/5/15 01:27

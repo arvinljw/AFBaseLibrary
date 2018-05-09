@@ -1,15 +1,12 @@
 package net.arvin.sample.uis.fragments;
 
-import android.Manifest;
 import android.os.Bundle;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import net.arvin.afbaselibrary.data.AFConstant;
-import net.arvin.afbaselibrary.uis.fragments.BaseHeaderFragment;
 import net.arvin.afbaselibrary.uis.fragments.BaseRefreshLoadFragment;
-import net.arvin.afbaselibrary.uis.helpers.IBaseContact;
 import net.arvin.sample.R;
 
 /**
@@ -59,7 +56,7 @@ public class HeaderFragment extends BaseRefreshLoadFragment<String> {
                 for (int i = 0; i < 15; i++) {
                     mItems.add("item" + i);
                 }
-                refreshLoadComplete(false);
+                refreshLoadComplete(false, false);
             }
         }, 1000);
     }

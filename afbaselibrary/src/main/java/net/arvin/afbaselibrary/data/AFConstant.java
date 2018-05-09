@@ -12,7 +12,8 @@ public class AFConstant {
     public static final int TOAST_LONG_MESSAGE_LENGTH = 10;
 
     public static final int REFRESH_FIRST_PAGE = 1;
-    public static final int REFRESH_DEFAULT_SIZE = 15;
+    public static final int REFRESH_DEFAULT_SIZE = 20;
+    public static final int REFRESH_ANIMATION_TIME = 500;
 
     public static final int PAGE_CACHE_SIZE = 5;
 }

@@ -40,8 +40,7 @@ public abstract class BasePopupWindow extends PopupWindow {
         mContent = LayoutInflater.from(context).inflate(getContentViewId(), null);
         mContent.setClickable(true);
         mRoot.addView(mContent, new RelativeLayout.LayoutParams(getContentDefaultWidth(), getContentDefaultHeight()));
-        ButterKnife.bind(this, mContent);
-
+        ButterKnife.bind(mRoot);
         setNormalConfig();
     }
 
@@ -196,7 +195,7 @@ public abstract class BasePopupWindow extends PopupWindow {
 
     private void show() {
         if (mLocationView == null) {
-            AFLog.d("never set locationView!");
+            AFLog.w("never set locationView!");
             return;
         }
         showAsDropDown(mLocationView);

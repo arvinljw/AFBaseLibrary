@@ -9,7 +9,6 @@ import net.arvin.afbaselibrary.uis.dialogs.BaseDialog;
 import net.arvin.sample.R;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by arvinljw on 17/5/15 16:09
@@ -64,7 +63,6 @@ public class TipsDialog extends BaseDialog {
         return this;
     }
 
-    @OnClick(R.id.btn_left)
     public void onBtnLeftClicked(View v) {
         if (mOnLeftClickListener != null) {
             mOnLeftClickListener.onLeftClicked(v);
@@ -72,7 +70,6 @@ public class TipsDialog extends BaseDialog {
         dismiss();
     }
 
-    @OnClick(R.id.btn_right)
     public void onBtnRightClicked(View v) {
         if (mOnRightClickListener != null) {
             mOnRightClickListener.onRightClicked(v);

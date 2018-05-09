@@ -2,9 +2,7 @@ package net.arvin.sample.uis.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.widget.PopupWindowCompat;
 import android.view.View;
-import android.widget.PopupWindow;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -39,7 +37,7 @@ public class CategoryFragment extends BaseRefreshLoadFragment<CategoryEntity> {
 
     @Override
     public int getContentView() {
-        return R.layout.layout_refresh_load;
+        return R.layout.template_layout_refresh_load;
     }
 
     @Override
@@ -59,10 +57,11 @@ public class CategoryFragment extends BaseRefreshLoadFragment<CategoryEntity> {
 
     @Override
     public void loadData(final int page) {
-        GankService.getInstance().getData(type, page, AFConstant.REFRESH_DEFAULT_SIZE, new ApiCallback<List<CategoryEntity>>() {
+        GankService.getData(type, page, AFConstant.REFRESH_DEFAULT_SIZE, new ApiCallback<List<CategoryEntity>>(this) {
+
             @Override
             public void onError(Throwable e) {
-                refreshLoadComplete(false);
+                refreshLoadComplete(false, false);
             }
 
             @Override
@@ -71,7 +70,7 @@ public class CategoryFragment extends BaseRefreshLoadFragment<CategoryEntity> {
                     mItems.clear();
                 }
                 mItems.addAll(categoryEntities);
-                refreshLoadComplete(isSuccess(categoryEntities));
+                refreshLoadComplete(isSuccess(categoryEntities), true);
             }
         });
     }
@@ -88,11 +87,5 @@ public class CategoryFragment extends BaseRefreshLoadFragment<CategoryEntity> {
             }
         }).setOnRightClickListener("取消", null);
         tipsDialog.show();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        GankService.getInstance().onDestroy();
     }
 }

@@ -1,7 +1,6 @@
 package net.arvin.sample.nets.converts;
 
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 
 import net.arvin.afbaselibrary.utils.AFLog;
 import net.arvin.sample.nets.callback.CallbackException;
@@ -31,7 +30,7 @@ class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     public T convert(ResponseBody value) throws IOException {
         String response = value.string();
         try {
-            AFLog.d(response);
+            AFLog.w(response);
             ResultEntity resultModel = gson.fromJson(response, ResultEntity.class);
             if (!resultModel.isError()) {
                 if (resultModel.getResults() != null) {

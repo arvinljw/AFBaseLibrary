@@ -4,7 +4,18 @@ import net.arvin.afbaselibrary.nets.ApiCallback;
 import net.arvin.afbaselibrary.nets.BaseNetService;
 import net.arvin.sample.entities.CategoryEntity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import me.imid.swipebacklayout.lib.Utils;
 
 /**
  * Created by arvinljw on 17/5/14 23:40
@@ -13,22 +24,8 @@ import java.util.List;
  */
 public class GankService extends BaseNetService {
 
-    private static GankService mService;
-
-    public static GankService getInstance() {
-        if (mService == null) {
-            synchronized (GankService.class) {
-                if (mService == null) {
-                    mService = new GankService();
-                }
-            }
-        }
-        return mService;
+    public static void getData(String type, int page, int size, ApiCallback<List<CategoryEntity>> callback) {
+        subscribe(GankNet.get().getData(type, size, page), callback);
     }
-
-    public void getData(String type, int page, int size, ApiCallback<List<CategoryEntity>> callback) {
-        addCompositeSub(addSchedulers(GankNet.getInstance().getDefaultApi().getData(type, size, page)).subscribe(callback));
-    }
-
 
 }

@@ -40,10 +40,6 @@
 
 ![](images/AFLibViewsStruct.png)
 
-每个界面，采用了面向接口编程，由于既有Activity又有Fragment，为了避免写的实现代码，所以我又抽取了对应的Helper去封装，而Helper提供的一些和界面类似的方法，只是为了提供一个default的值，而界面中的方法是为了让子类继承后可重写，方便修改。
-
-*注：这种设计方法是我自己想的，感觉还差点什么，因为细心的同学能很快发现其实，Activity和Fragment中的代码几乎是一样的，只是继承的对象不同而已，但是因为目前还不知如何去更好的处理这种情况，如果哪位仁兄有高见可随时联系我，或者提issue。*
-
 
 ### 网络模块
 
@@ -127,31 +123,37 @@ Y方向的偏移量通常都是，大于0向下，小于0向上；
 引入的依赖包包：
 
 ```
-def supportVersion = "25.3.1"
-compile 'com.android.support:appcompat-v7:'.concat(supportVersion)
-compile 'com.android.support:recyclerview-v7:'.concat(supportVersion)
-compile 'com.android.support:support-v4:'.concat(supportVersion)
-compile 'com.android.support:percent:'.concat(supportVersion)
-compile 'com.android.support:design:'.concat(supportVersion)
+def supportVersion = "27.1.1"
+api fileTree(dir: 'libs', include: ['*.jar'])
+api 'com.android.support:appcompat-v7:'.concat(supportVersion)
+api 'com.android.support:design:'.concat(supportVersion)
 //retrofit+rxjava
-compile 'com.squareup.retrofit2:retrofit:2.2.0'
-compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
-compile 'io.reactivex:rxjava:1.2.1'
-compile 'io.reactivex:rxandroid:1.2.1'
-compile 'com.google.code.gson:gson:2.7'
+api 'com.squareup.retrofit2:retrofit:2.4.0'
+api 'com.squareup.retrofit2:converter-gson:2.4.0'
+api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+api 'io.reactivex.rxjava2:rxjava:2.1.13'
+api 'io.reactivex.rxjava2:rxandroid:2.0.2'
 //图片加载
-compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
-compile 'com.github.bumptech.glide:glide:3.7.0'
+api 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+api 'com.github.bumptech.glide:glide:3.7.0'
+//view加载
+api 'com.jakewharton:butterknife:8.4.0'
+annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 //页面事件交互
-compile 'org.greenrobot:eventbus:3.0.0'
-//view注解
-compile 'com.jakewharton:butterknife:8.4.0'
-compile 'com.jakewharton:butterknife-compiler:8.4.0'
+api 'org.greenrobot:eventbus:3.1.1'
 //日志
-compile 'com.orhanobut:logger:1.15'
+api 'com.orhanobut:logger:1.15'
 //BGABanner
-compile 'cn.bingoogolapple:bga-banner:2.1.7@aar'
+api 'cn.bingoogolapple:bga-banner:2.1.7@aar'
+//BaseAdapter
+api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+//tabLayout
+api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+//refresh
+api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
+api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-5'
+//swipebacklayout
+api 'me.imid.swipebacklayout.lib:library:1.1.0'
 ```
 
 ### 代码混淆

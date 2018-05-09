@@ -12,7 +12,7 @@ import retrofit2.Converter;
  */
 class GankNet extends BaseNet<GankApi> {
 
-    private static GankNet mNet;
+    private static GankNet mNet = new GankNet();
 
     @Override
     protected String getDefaultBaseUrl() {
@@ -24,22 +24,15 @@ class GankNet extends BaseNet<GankApi> {
         return ResultConvertFactory.create();
     }
 
-    static GankNet getInstance() {
-        if (mNet == null) {
-            synchronized (BaseNet.class) {
-                if (mNet == null) {
-                    mNet = new GankNet();
-                }
-            }
-        }
-        return mNet;
+    static GankApi get() {
+        return mNet.getDefaultApi();
     }
 
     /**
      * 其他模块的接口可以这样写，就能很好的区分开了
      * 若是其中配置有变，就需要自己根据需求参照{@link #getApi(Class)}并重写该方法
      */
-    OtherApi getOtherApi(){
+    OtherApi getOtherApi() {
         return getApi(OtherApi.class);
     }
 }

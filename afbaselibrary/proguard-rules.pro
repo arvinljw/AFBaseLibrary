@@ -168,7 +168,7 @@
 #---------------------------------一些不要混淆的代码--开始-------------------
 
 -keep class net.arvin.afbaselibrary.nets.** { *; }
--keep class net.arvin.afbaselibrary.entities.** { *; }
+-keep class net.arvin.afbaselibrary.data.** { *; }
 
 #<反射>
 -keep class net.arvin.afbaselibrary.nets.BaseNet{*;}

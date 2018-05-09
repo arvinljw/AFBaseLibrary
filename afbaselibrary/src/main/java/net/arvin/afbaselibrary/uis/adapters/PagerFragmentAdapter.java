@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import net.arvin.afbaselibrary.uis.helpers.IBaseTabPageContact;
-
 import java.util.List;
 
 /**
@@ -13,12 +11,12 @@ import java.util.List;
  * Function：
  * Desc：
  */
-public class PagerFragmentAdapter<T extends IBaseTabPageContact.IPageTitle> extends FragmentStatePagerAdapter {
+public class PagerFragmentAdapter<T extends PagerFragmentAdapter.IPageTitle> extends FragmentStatePagerAdapter {
     private List<T> mItems;
 
-    private IBaseTabPageContact.IPageContent mPageContent;
+    private IPageContent mPageContent;
 
-    public PagerFragmentAdapter(FragmentManager fm, List<T> items, IBaseTabPageContact.IPageContent pageContent) {
+    public PagerFragmentAdapter(FragmentManager fm, List<T> items, PagerFragmentAdapter.IPageContent pageContent) {
         super(fm);
         this.mItems = items;
         this.mPageContent = pageContent;
@@ -38,5 +36,13 @@ public class PagerFragmentAdapter<T extends IBaseTabPageContact.IPageTitle> exte
     @Override
     public CharSequence getPageTitle(int position) {
         return mItems.get(position).getTitle();
+    }
+
+    public interface IPageTitle {
+        String getTitle();
+    }
+
+    public interface IPageContent {
+        Fragment getContent(int position);
     }
 }

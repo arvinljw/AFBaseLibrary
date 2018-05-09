@@ -1,7 +1,7 @@
 package net.arvin.sample.nets.callback;
 
 import net.arvin.afbaselibrary.nets.ApiCallback;
-import net.arvin.sample.nets.callback.CallbackException;
+import net.arvin.afbaselibrary.utils.AFLog;
 
 /**
  * Created by arvinljw on 17/5/15 01:11
@@ -9,6 +9,9 @@ import net.arvin.sample.nets.callback.CallbackException;
  * Desc：
  */
 public abstract class GankCallback<T> extends ApiCallback<T> {
+    public GankCallback(Object obj) {
+        super(obj);
+    }
 
     @Override
     public void onError(Throwable e) {
@@ -18,12 +21,10 @@ public abstract class GankCallback<T> extends ApiCallback<T> {
                 reLogin();
             }
         }
-        onCallbackError(e);
+        AFLog.w(e.getMessage());
     }
 
     private void reLogin() {
-        // TODO: 17/5/15 重新登录
-    }
 
-    public abstract void onCallbackError(Throwable e);
+    }
 }

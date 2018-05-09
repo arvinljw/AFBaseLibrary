@@ -12,16 +12,16 @@ import java.lang.ref.WeakReference;
  */
 public class WeakHandler extends Handler {
 
-    private WeakReference<IWeakHandler> mActivity;
+    private WeakReference<IWeakHandler> mHandler;
 
-    public WeakHandler(IWeakHandler activity) {
-        mActivity = new WeakReference<>(activity);
+    public WeakHandler(IWeakHandler handler) {
+        mHandler = new WeakReference<>(handler);
     }
 
     @Override
     public void handleMessage(Message msg) {
-        if (mActivity != null) {
-            IWeakHandler weakHandleInterface = mActivity.get();
+        if (mHandler != null) {
+            IWeakHandler weakHandleInterface = mHandler.get();
             if (weakHandleInterface != null) {
                 weakHandleInterface.handleMessage(msg);
             }

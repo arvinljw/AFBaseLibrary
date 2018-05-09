@@ -8,7 +8,7 @@
 * 列表只支持下拉刷新；
 * 列表只支持上拉加载；
 
-默认这个界面是加载的垂直线性的列表，而Adapter才用的是[BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)这个库（版本：2.9.15），选择他的原因也是因为他功能强大，不了解的也可以去看看它的wiki，非常详细。当然这里我也把它下载下来放到了lib中，因为和刷新组件一样方便调整。
+默认这个界面是加载的垂直线性的列表，而Adapter才用的是[BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)这个库，选择他的原因也是因为他功能强大，不了解的也可以去看看它的wiki，非常详细。
 
 **使用方式：(参照HeaderFragment)**
 

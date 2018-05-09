@@ -25,7 +25,6 @@ public abstract class BaseDialog extends Dialog {
         super(context, themeResId);
         setContentView(getContentView());
         ButterKnife.bind(this);
-
         resetDialogSize();
 
         initView();

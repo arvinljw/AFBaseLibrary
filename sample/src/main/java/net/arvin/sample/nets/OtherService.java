@@ -26,6 +26,6 @@ public class OtherService extends BaseNetService {
     }
 
     public void getOtherApiData(String type, int page, int size, ApiCallback<List<CategoryEntity>> callback) {
-        addCompositeSub(addSchedulers(GankNet.getInstance().getOtherApi().getOtherApiData(type, size, page)).subscribe(callback));
+//        GankNet.getInstance().getOtherApi().getOtherApiData(type, size, page).subscribe(callback);
     }
 }
