@@ -14,6 +14,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,7 +99,7 @@ public abstract class BaseNet<T> {
                     e.printStackTrace();
                 }
             }
-            httpClient = clientBuilder.build();
+            httpClient = clientBuilder.proxy(Proxy.NO_PROXY).build();
             makeGlideSupportHttps();
         }
         return httpClient;
@@ -117,7 +118,6 @@ public abstract class BaseNet<T> {
                     requestBuilder.addHeader(key, headers.get(key));
                 }
                 request = requestBuilder.build();
-
                 request = dealRequest(request);
                 Response response = chain.proceed(request);
                 dealResponse(response);
